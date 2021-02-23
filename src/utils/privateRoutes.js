@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const auth = async (req, res, next) => {
   //I check if the header contains a token
   let token = req.cookies.token;
-
+  
   //if there is no token, I deny the access
   if (!token) {
     const error = new Error("Access Denied");
@@ -13,6 +13,11 @@ const auth = async (req, res, next) => {
     try {
       //I grab the info from the toekn and i put them in a request which will be sent to the route handler
       const verifiedUser = await jwt.verify(token, process.env.TOKEN_SECRET);
+      //1. verifico se il token e' valido
+      //2. decodifico il token
+      //se il token e' scaduto o se il segreto non e' quello legato al token allora lascio un errore
+      if(!verifiedUser) throw error
+      //sajgfbaskudfneiausdhnviwudsfnviwuefnviownffgdsfgdfhdf.dsfs -->   { id: user._id, username: user.username }
       req.user = verifiedUser;
       next();
     } catch (err) {

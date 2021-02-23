@@ -17,9 +17,18 @@ songRoutes.get("/search/:q", async (req, res, next) => {
     };
     const resp = await axios(options);
     console.log(resp);
-    const {
+    let {
       data: { data },
     } = await resp;
+    data = data.map((d) => ({ ...d.album, artist: d.artist.name }));
+    data = [...new Set(data)];
+    console.log(data);
+    data = data.map(({ id, title, cover, artist }) => ({
+      id,
+      title,
+      cover,
+      artist,
+    }));
     res.send(data);
   } catch (err) {
     console.log(err);
